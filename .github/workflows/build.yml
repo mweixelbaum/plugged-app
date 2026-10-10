@@ -15,7 +15,8 @@ jobs:
         with: { node-version: 22 }
       - uses: dtolnay/rust-toolchain@stable
       - run: npm ci
-      - run: npm run build:windows
+      - run: bash scripts/ci-run.sh "Windows-Build" npm run build:windows
+        shell: bash
       - uses: actions/upload-artifact@v4
         with:
           name: windows
@@ -35,7 +36,7 @@ jobs:
         with: { node-version: 22 }
       - uses: dtolnay/rust-toolchain@stable
       - run: npm ci
-      - run: npm run build:linux
+      - run: bash scripts/ci-run.sh "Linux-Build" npm run build:linux
       - uses: actions/upload-artifact@v4
         with:
           name: linux
@@ -49,8 +50,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 21 }
-      - uses: android-actions/setup-android@v3
-      - run: sdkmanager "ndk;28.2.13676358"
+      # Das Android SDK ist auf den GitHub-Runnern vorinstalliert (ANDROID_HOME).
+      - run: bash scripts/ci-run.sh "NDK installieren" "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;28.2.13676358"
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - uses: dtolnay/rust-toolchain@stable
@@ -67,9 +68,7 @@ jobs:
           keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
           password=${{ secrets.ANDROID_KEY_PASSWORD }}
           EOF
-      - run: npm run build:android
-        env:
-          NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/28.2.13676358
+      - run: NDK_HOME="$ANDROID_HOME/ndk/28.2.13676358" bash scripts/ci-run.sh "Android-Build" npm run build:android
       - uses: actions/upload-artifact@v4
         with:
           name: android
@@ -88,13 +87,13 @@ jobs:
           targets: aarch64-apple-ios,aarch64-apple-ios-sim
       - run: brew install xcodegen
       - run: npm ci
-      - run: npx tauri ios init --ci
+      - run: bash scripts/ci-run.sh "iOS-Init" npx tauri ios init --ci
       - name: IPA bauen (unsigniert)
-        run: npm run build:ios
+        run: bash scripts/ci-run.sh "IPA-Build" npm run build:ios
       - name: Simulator-Build
-        run: npx tauri ios build --no-sign --target aarch64-sim
+        run: bash scripts/ci-run.sh "Simulator-Build" npx tauri ios build --no-sign --target aarch64-sim
       - name: Screenshots im iPhone-Simulator
-        run: bash scripts/ios-simulator-screenshot.sh ios-screenshots
+        run: bash scripts/ci-run.sh "Simulator-Screenshots" bash scripts/ios-simulator-screenshot.sh ios-screenshots
       - uses: actions/upload-artifact@v4
         with:
           name: ios
