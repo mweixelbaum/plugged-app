@@ -1,0 +1,75 @@
+<!--
+  "About the App"-Seite. Wird beim Kompilieren in die App eingebaut (keine Netzwerkanfrage)
+  und von about.js in #fi-main-content des Panels eingesetzt. Verwendet die Filament-Klassen
+  des Panels, damit die Seite wie eine echte Panel-Seite aussieht.
+  Platzhalter: __APP_NAME__, __APP_VERSION__, __APP_PLATFORM__, __APP_ENGINE__, __APP_DESKTOP_NOTE__
+-->
+<div class="fi-page pa-about-page">
+  <div class="fi-page-header-main-ctn">
+    <header class="fi-header">
+      <div>
+        <h1 class="fi-header-heading">About the App</h1>
+        <p class="fi-header-subheading">You are using the native plugged.host app.</p>
+      </div>
+    </header>
+
+    <div class="fi-page-main">
+      <div class="fi-page-content">
+        <div class="pa-about-grid">
+
+          <section class="fi-section pa-card">
+            <header class="fi-section-header pa-card-header">
+              <img src="https://panel.plugged.host/plugged.host_nobg.png" alt="" class="pa-logo">
+              <div>
+                <h3 class="fi-section-header-heading pa-card-title">__APP_NAME__</h3>
+                <p class="fi-section-header-description pa-muted">Version __APP_VERSION__</p>
+              </div>
+            </header>
+            <div class="fi-section-content pa-card-content">
+              <dl class="pa-facts">
+                <dt>Version</dt><dd><code>__APP_VERSION__</code></dd>
+                <dt>Platform</dt><dd>__APP_PLATFORM__</dd>
+                <dt>Engine</dt><dd>__APP_ENGINE__</dd>
+                <dt>Framework</dt><dd>Tauri 2</dd>
+                <dt>Made by</dt><dd>PABLO Development</dd>
+              </dl>
+            </div>
+          </section>
+
+          <section class="fi-section pa-card">
+            <header class="fi-section-header pa-card-header">
+              <div>
+                <h3 class="fi-section-header-heading pa-card-title">What's different in the app</h3>
+                <p class="fi-section-header-description pa-muted">The panel works just like in your browser, with a few exceptions.</p>
+              </div>
+            </header>
+            <div class="fi-section-content pa-card-content">
+              <ul class="pa-list">
+                <li>Buying tokens is <strong>not available</strong> in the app. Use the website instead.</li>
+                <li>Backups and links to other websites open in your default browser.</li>
+                __APP_DESKTOP_NOTE__
+                <li>The website itself has no access to your device. The app only shows the panel.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="fi-section pa-card">
+            <header class="fi-section-header pa-card-header">
+              <div>
+                <h3 class="fi-section-header-heading pa-card-title">Links</h3>
+              </div>
+            </header>
+            <div class="fi-section-content pa-card-content pa-links">
+              <a href="https://plugged.host/" class="fi-btn fi-size-md fi-color fi-color-primary fi-bg-color-600 hover:fi-bg-color-500 dark:fi-bg-color-600 dark:hover:fi-bg-color-500 fi-text-color-0 hover:fi-text-color-0 dark:fi-text-color-0 dark:hover:fi-text-color-0">Website</a>
+              <a href="https://status.plugged.host/" class="fi-btn fi-size-md pa-btn-gray">Status</a>
+              <a href="https://noprofit.space/terms" class="fi-btn fi-size-md pa-btn-gray">Terms</a>
+              <a href="https://noprofit.space/privacy" class="fi-btn fi-size-md pa-btn-gray">Privacy</a>
+              <a href="https://development.dislook.buzz" class="fi-btn fi-size-md pa-btn-gray">PABLO Development</a>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

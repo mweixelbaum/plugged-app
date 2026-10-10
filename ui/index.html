@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>plugged.host</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #0b0d10; color: #e6e8eb;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    main { height: 100%; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 16px; padding: 16px; box-sizing: border-box; text-align: center; }
+    h1 { font-size: 20px; margin: 0; }
+    p { margin: 0; color: #9aa3ad; max-width: 420px; }
+    button { background: #2451d6; color: #fff; border: 0; border-radius: 8px;
+      padding: 10px 20px; font-size: 15px; cursor: pointer; }
+    .spinner { width: 28px; height: 28px; border: 3px solid #2451d6; border-right-color: transparent;
+      border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main id="loading">
+    <div class="spinner"></div>
+    <p>Connecting to plugged.host …</p>
+  </main>
+  <main id="offline" hidden>
+    <h1>No Connection</h1>
+    <p>plugged.host ist gerade nicht erreichbar. Prüfe deine Internetverbindung und versuche es erneut.</p>
+    <button id="retry">Erneut versuchen</button>
+  </main>
+  <script>
+    const START_URL = 'https://panel.plugged.host/';
+
+    async function connect() {
+      document.getElementById('loading').hidden = false;
+      document.getElementById('offline').hidden = true;
+      try {
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 10000);
+        // no-cors: Antwort ist opak, aber ein Netzwerkfehler wirft trotzdem.
+        await fetch(START_URL, { mode: 'no-cors', cache: 'no-store', signal: ctrl.signal });
+        clearTimeout(t);
+        location.replace(START_URL);
+      } catch {
+        document.getElementById('loading').hidden = true;
+        document.getElementById('offline').hidden = false;
+      }
+    }
+
+    document.getElementById('retry').addEventListener('click', connect);
+    window.addEventListener('online', connect);
+    connect();
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "plugged",
+  "version": "1.0.0",
+  "description": "Desktop- und Android-App für plugged.host",
+  "private": true,
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "node scripts/with-msvc.mjs tauri dev",
+    "icons": "tauri icon assets/og.png",
+    "build:windows": "node scripts/with-msvc.mjs tauri build --bundles nsis,msi",
+    "build:linux": "tauri build --bundles appimage",
+    "build:android": "node scripts/with-msvc.mjs tauri android build --apk --target aarch64 armv7 x86_64",
+    "build:ios": "tauri ios build --no-sign --target aarch64"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}

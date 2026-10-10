@@ -1,0 +1,16 @@
+/node_modules
+npm-debug.log*
+
+# Rust / Tauri
+/src-tauri/target
+/src-tauri/gen/schemas
+
+# Android-Signatur (niemals committen!)
+*.jks
+*.keystore
+/src-tauri/gen/android/keystore.properties
+
+# Fertige Pakete
+/release
+
+.vscode/*
