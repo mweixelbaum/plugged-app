@@ -46,11 +46,15 @@ fn path_matches(path: &str, prefix: &str) -> bool {
     let prefix = prefix.trim_end_matches('/');
     prefix.is_empty()
         || path == prefix
-        || path.strip_prefix(prefix).is_some_and(|rest| rest.starts_with('/'))
+        || path
+            .strip_prefix(prefix)
+            .is_some_and(|rest| rest.starts_with('/'))
 }
 
 fn matches(rules: &[Rule], host: &str, path: &str) -> bool {
-    rules.iter().any(|r| host_matches(host, r.host) && path_matches(path, r.path))
+    rules
+        .iter()
+        .any(|r| host_matches(host, r.host) && path_matches(path, r.path))
 }
 
 fn is_in_app(url: &Url) -> bool {
@@ -60,7 +64,9 @@ fn is_in_app(url: &Url) -> bool {
         "http" | "https" => {}
         _ => return false,
     }
-    let Some(host) = url.host_str() else { return false };
+    let Some(host) = url.host_str() else {
+        return false;
+    };
     if host == "tauri.localhost" || host == "localhost" {
         return true;
     }
@@ -96,7 +102,10 @@ const DESKTOP_NOTE: &str =
     "<li>The app remembers its window size and position, and only one copy runs at a time.</li>";
 
 fn escape_html(s: &str) -> String {
-    s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;")
+    s.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
 }
 
 /// Baut das Skript für den Sidebar-Punkt "About the App": die lokale Seite about.html wird
@@ -109,7 +118,10 @@ fn about_script(info: &tauri::PackageInfo) -> String {
         .replace("__APP_PLATFORM__", os)
         .replace("__APP_ENGINE__", engine)
         // Fenster merken / nur eine Instanz gibt es nur auf dem Desktop (siehe run()).
-        .replace("__APP_DESKTOP_NOTE__", if cfg!(desktop) { DESKTOP_NOTE } else { "" });
+        .replace(
+            "__APP_DESKTOP_NOTE__",
+            if cfg!(desktop) { DESKTOP_NOTE } else { "" },
+        );
     let html = serde_json::to_string(&html).expect("about.html als JSON");
     include_str!("inject/about.js").replace("__ABOUT_HTML__", &html)
 }
@@ -117,7 +129,9 @@ fn about_script(info: &tauri::PackageInfo) -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     #[allow(unused_mut)]
-    let mut builder = tauri::Builder::default().plugin(tauri_plugin_opener::init());
+    let mut builder = tauri::Builder::default()
+        .plugin(tauri_plugin_os::init())
+        .plugin(tauri_plugin_opener::init());
 
     #[cfg(desktop)]
     {
@@ -138,7 +152,8 @@ pub fn run() {
 
             let win = WebviewWindowBuilder::new(app, "main", WebviewUrl::App("index.html".into()))
                 .initialization_script(
-                    include_str!("inject/links.js").replace("__EXTERNAL_RULES__", &external_rules_json()),
+                    include_str!("inject/links.js")
+                        .replace("__EXTERNAL_RULES__", &external_rules_json()),
                 )
                 .initialization_script(include_str!("inject/tokens.js"))
                 .initialization_script(about_script(app.package_info()))
