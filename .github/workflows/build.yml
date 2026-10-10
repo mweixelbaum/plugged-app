@@ -88,16 +88,22 @@ jobs:
       - run: brew install xcodegen
       - run: npm ci
       - run: bash scripts/ci-run.sh "iOS-Init" npx tauri ios init --ci
+      # --archive-only: Tauri findet die .app nach dem Archivieren nicht (anderer Name),
+      # deshalb packt scripts/ios-package-ipa.sh die .ipa selbst.
       - name: IPA bauen (unsigniert)
-        run: bash scripts/ci-run.sh "IPA-Build" npm run build:ios
-      - name: Simulator-Build
-        run: bash scripts/ci-run.sh "Simulator-Build" npx tauri ios build --no-sign --target aarch64-sim
-      - name: Screenshots im iPhone-Simulator
-        run: bash scripts/ci-run.sh "Simulator-Screenshots" bash scripts/ios-simulator-screenshot.sh ios-screenshots
+        run: bash scripts/ci-run.sh "IPA-Build" npx tauri ios build --no-sign --archive-only --target aarch64
+      - name: IPA packen
+        run: bash scripts/ci-run.sh "IPA packen" bash scripts/ios-package-ipa.sh ios-build plugged
       - uses: actions/upload-artifact@v4
         with:
           name: ios
-          path: src-tauri/gen/apple/build/arm64/*.ipa
+          path: ios-build/*.ipa
+      - name: Simulator-Build
+        run: |
+          rm -rf src-tauri/gen/apple/build/*.xcarchive
+          bash scripts/ci-run.sh "Simulator-Build" npx tauri ios build --no-sign --archive-only --target aarch64-sim
+      - name: Screenshots im iPhone-Simulator
+        run: bash scripts/ci-run.sh "Simulator-Screenshots" bash scripts/ios-simulator-screenshot.sh ios-screenshots
       - uses: actions/upload-artifact@v4
         if: always()
         with:

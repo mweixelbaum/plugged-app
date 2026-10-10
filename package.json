@@ -10,7 +10,7 @@
     "build:windows": "node scripts/with-msvc.mjs tauri build --bundles nsis,msi",
     "build:linux": "tauri build --bundles appimage",
     "build:android": "node scripts/with-msvc.mjs tauri android build --apk --target aarch64 armv7 x86_64",
-    "build:ios": "tauri ios build --no-sign --target aarch64"
+    "build:ios": "tauri ios build --no-sign --archive-only --target aarch64 && bash scripts/ios-package-ipa.sh ios-build plugged"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2"

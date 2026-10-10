@@ -8,7 +8,8 @@ OUT="${1:-ios-screenshots}"
 BUNDLE_ID="host.plugged.app"
 mkdir -p "$OUT"
 
-APP=$(find src-tauri/gen/apple/build -maxdepth 3 -type d -name "*.app" -path "*sim*" | head -n 1)
+# Simulator-Build per `tauri ios build --no-sign --archive-only --target aarch64-sim`.
+APP=$(find src-tauri/gen/apple/build -path "*.xcarchive/Products/Applications/*.app" -maxdepth 5 -type d | head -n 1)
 if [ -z "$APP" ]; then
   echo "Kein Simulator-Build (.app) gefunden." >&2
   exit 1
