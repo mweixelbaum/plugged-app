@@ -1,2 +1,2 @@
-# Shell-Skripte immer mit LF auschecken (auch auf Windows-Runnern), sonst scheitert bash an .
+# Shell-Skripte immer mit LF auschecken (auch auf Windows-Runnern), sonst scheitert bash an CR-Zeichen.
 *.sh text eol=lf
