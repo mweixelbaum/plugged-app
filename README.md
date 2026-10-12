@@ -25,6 +25,11 @@ Eine Codebasis für **Windows** (`.exe`/`.msi`), **Android** (`.apk`), **Linux**
   Inhaltsbereich angezeigt. Platzhalter `__APP_NAME__`, `__APP_VERSION__`, `__APP_PLATFORM__` und
   `__APP_ENGINE__` füllt `lib.rs` automatisch.
 
+## Anleitungen
+
+- [docs/iphone.md](docs/iphone.md): die `.ipa` ohne Mac aufs iPhone bringen
+- [docs/shell.md](docs/shell.md): die Skripte in `scripts/` für eine andere Tauri-App einstellen
+
 ## Projektstruktur
 
 ```
@@ -34,7 +39,8 @@ src-tauri/src/inject/         JavaScript, das in die Webseite eingefügt wird
 src-tauri/tauri.conf.json     App-Name, ID, Bundle-Einstellungen
 src-tauri/gen/android/        Android-Projekt (Gradle)
 assets/og.png                 Quell-Icon (npm run icons erzeugt alle Icon-Größen)
-.github/workflows/build.yml   Cloud-Build für alle drei Plattformen
+.github/workflows/build.yml   Cloud-Build für alle Plattformen
+scripts/                      Build-Hilfsskripte (siehe docs/shell.md)
 ```
 
 ## Bauen
@@ -73,17 +79,13 @@ Eine `.ipa` lässt sich nur unter macOS bauen. Der Job `ios` im Workflow erledig
 kostenlosen Mac-Runner von GitHub (bei **öffentlichen** Repositories ohne Minutenlimit):
 
 1. Auf GitHub unter **Actions → Build → Run workflow** starten (oder auf `master`/`main` pushen).
-2. Nach dem Lauf unter **Artifacts** herunterladen:
+2. Nach dem Lauf unter **Artifacts** herunterladen (nur mit GitHub-Login möglich):
    - `ios`: die unsignierte `.ipa`
    - `ios-screenshots`: Screenshots aus dem iPhone-Simulator (zum Prüfen von Notch/Home-Leiste)
-3. Unter Windows mit [Sideloadly](https://sideloadly.io/) installieren: iPhone per Kabel anschließen,
-   `.ipa` hineinziehen, normale Apple-ID eingeben, *Start*. Auf dem iPhone danach unter
-   *Einstellungen → Allgemein → VPN & Geräteverwaltung* dem eigenen Entwicklerprofil vertrauen und
-   ab iOS 16 den *Entwicklermodus* einschalten.
+3. Mit Sideloadly unter Windows aufs iPhone installieren. Die Schritt-für-Schritt-Anleitung steht in
+   **[docs/iphone.md](docs/iphone.md)**.
 
-Einschränkungen mit kostenloser Apple-ID: Die App läuft **7 Tage**, dann erneut mit Sideloadly
-installieren. Maximal 3 selbst installierte Apps. Verteilung an andere
-(TestFlight, App Store) geht nur mit einem bezahlten Apple-Developer-Konto.
+Mit kostenloser Apple-ID läuft die App **7 Tage** und muss dann erneut installiert werden.
 
 ### Android-Signatur
 
